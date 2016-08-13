@@ -1,5 +1,5 @@
 {
-  "name": "react-animate.css",
+  "name": "react-animate-css",
   "version": "0.0.1",
   "description": "React animation component for the Animate.css library.",
   "main": "dist/react-aninmate.css.min.js",

@@ -173,6 +173,7 @@ class App extends React.Component {
             </form>
             <hr />
             <p className="meta"><a href="https://raw.github.com/daneden/animate.css/master/animate.css" download="animate.css">Download Animate.css</a> or <a href="//github.com/daneden/animate.css">View on GitHub</a></p>
+            <p className="meta"><a href="https://raw.github.com/loljs/react-animate.css/master/animate.css" download="animate.css">Download React Animate.css</a> or <a href="//github.com/loljs/react-animate.css">View on GitHub</a></p>
             <p><small>Another thing from <a href="//daneden.me">Daniel Eden</a>.</small></p>
             <p><small>With a little help from <a href="//sknkwrkz.io">Jon Brito</a>.</small></p>
           </div>
