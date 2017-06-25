@@ -22,21 +22,24 @@ class App extends React.Component {
 
   onAnimClick(e) {
     const { animation } = this.state;
-
-    this.setState({ animation: !animation ? 'bounce' : animation });
-
+    const currentAnimation = !animation ? 'bounce' : animation;
+    
     e.preventDefault();
+
+    this.setState({ animation: currentAnimation, forceAnimation: true });
+    
+    setTimeout(() => this.setState({ animation: currentAnimation, forceAnimation: false }), 1000)
   }
 
   render() {
-    const { animation } = this.state;
+    const { animation, forceAnimation } = this.state;
 
     return (
       <div>
         <header className="site__header island">
           <div className="wrap">
             <span id="animationSandbox">
-              <Animate type={animation}>
+              <Animate type={animation} forceAnimation={forceAnimation}>
                 <h1 className="site__title mega">
                   React Animate.css
                 </h1>

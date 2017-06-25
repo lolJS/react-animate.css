@@ -1,4 +1,5 @@
-import React, { PureComponent, PropTypes } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import AnimateSimple from './components/AnimateSimple';
 import AnimateTransitionGroup from './components/AnimateTransitionGroup';
 import animationClasses from './animateClasses.json';
@@ -56,6 +57,7 @@ Animate.propTypes = {
   appearTimeout: PropTypes.number,
   enterTimeout: PropTypes.number,
   leaveTimeout: PropTypes.number,
+  forceAnimation: PropTypes.bool,
 };
 
 Animate.defaultProps = {

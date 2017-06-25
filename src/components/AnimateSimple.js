@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { getAnimationTiming } from '../index';
 import animationClasses from '../animateClasses.json';
 
@@ -23,10 +24,10 @@ class AnimateSimple extends Component {
     const { animating } = this.state;
 
     if (nextProps.type && !animating) {
-      this.setAnimating(nextProps.type);
+      this.setAnimating(this.props.type);
     }
   }
-
+  
   setAnimating(animation) {
     this.setState({ animating: true });
     setTimeout(() => this.setState({ animating: false }), getAnimationTiming(animation));
@@ -37,7 +38,7 @@ class AnimateSimple extends Component {
     const { animating } = this.state;
 
     return (
-      <div className={animating ? `animated ${type}` : null}>
+      <div className={animating ? `animated ${type}` : ''}>
         {this.props.children}
       </div>
     );
@@ -49,6 +50,7 @@ AnimateSimple.propTypes = {
   component: PropTypes.string,
   type: PropTypes.oneOf(animationClasses),
   timeout: PropTypes.number,
+  forceAnimation: PropTypes.bool,
 };
 
 AnimateSimple.defaultProps = {

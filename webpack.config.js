@@ -1,49 +1,64 @@
 const webpack = require('webpack'); // eslint-disable-line import/no-extraneous-dependencies
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
+const path = require('path');
 const ReactAnimateEnv = process.env.REACT_ANIMATE_WEBPACK;
 
 const config = {
   entry: ['./src/index.js'],
   output: {
-    path: 'dist',
+    path: path.join(__dirname, 'dist'),
     publicPath: '',
     filename: 'react-animate.css.js',
     library: 'ReactAnimateCss',
     libraryTarget: 'umd',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loader: 'babel',
+        include: [path.resolve('src')],
+        use: {
+          loader: 'babel-loader',
+          options: { 
+            presets: [
+              ["es2015", { modules: false, loose: true }],
+              "react"
+            ],
+            plugins: [
+              'syntax-dynamic-import',
+              'transform-react-remove-prop-types',
+              'transform-react-constant-elements',
+              'transform-react-inline-elements'
+            ]
+          }
+        },
         exclude: [/node_modules/, /\.test\.js/],
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
-        exclude: [/node_modules/],
-      },
+      }
     ],
   },
-  plugins: [new webpack.optimize.OccurenceOrderPlugin()],
+  performance: {
+    hints: "warning", // enum
+    maxAssetSize: 200000, // int (in bytes),
+    maxEntrypointSize: 400000, // int (in bytes)
+    assetFilter: function(assetFilename) {
+      // Function predicate that provides asset filenames
+      return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+    }
+  }
 };
 
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true
+  }));
 
-  config.module.loaders = [{
-    test: /\.js$/,
-    loader: 'babel',
-    exclude: [/node_modules/, /index\.demo\.js/, /\.test\.js/, /app\.js/],
-  },
-  {
-    test: /\.json$/,
-    loader: 'json-loader',
-    exclude: [/node_modules/],
-  }];
+  // config.module.rules.push(...[{
+  //   test: /\.js$/,
+  //   use: 'babel-loader',
+  //   exclude: [/node_modules/, /index\.demo\.js/, /\.test\.js/, /app\.js/],
+  // }]);
 
   config.externals = [
     {
@@ -61,33 +76,49 @@ if (process.env.NODE_ENV === 'production') {
 
 if (ReactAnimateEnv === 'server' || ReactAnimateEnv === 'demo') {
   config.entry = './src/index.demo.js';
+
   config.plugins = [
-    new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({
       title: 'React Animate.css',
       template: './index.ejs',
       env: ReactAnimateEnv === 'demo' ? 'production' : null,
     }),
-    new ExtractTextPlugin('[name].css'),
+    // new ExtractTextPlugin('[name].css'),
   ];
+  
+  config.devServer = {
+    contentBase: path.join(__dirname, 'dist'), // boolean | string | array, static file location
+    compress: true, // enable gzip compression
+    historyApiFallback: true, // true for index.html upon 404, object for multiple paths
+    hot: false, // hot module replacement. Depends on HotModuleReplacementPlugin
+    https: false, // true for self-signed, object for cert authority
+    noInfo: true, // only errors & warns on hot reload
+  };
 
-  config.module.loaders = [
-    {
-      test: /\.js$/,
-      loader: 'babel',
-      exclude: [/node_modules/, /\.test\.js/],
-    },
-    {
-      test: /\.json$/,
-      loader: 'json-loader',
-      exclude: [/node_modules/],
-    },
-    { test: /\.css/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader') },
-    { test: /\.svg$/, loader: 'url-loader' },
-    { test: /\.woff$/, loader: 'file-loader' },
-    { test: /\.ttf$/, loader: 'file-loader' },
-    { test: /\.eot$/, loader: 'file-loader' },
-  ];
+  [].push.apply(config.module.rules,
+    [
+      { 
+        test: /\.css$/, 
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: false,
+              modules: false,
+              importLoaders: 1,
+              // localIdentName: '[hash:base64:5]',
+            }
+          }
+        ]
+      }, 
+      { test: /\.svg$/, use: 'url-loader' },
+      { test: /\.woff$/, use: 'url-loader' },
+      { test: /\.ttf$/, use: 'url-loader' },
+      { test: /\.eot$/, use: 'url-loader' }
+    ]);
 }
+
+console.info(config.module.rules);
 
 module.exports = config;
