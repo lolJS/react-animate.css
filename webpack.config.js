@@ -119,6 +119,4 @@ if (ReactAnimateEnv === 'server' || ReactAnimateEnv === 'demo') {
     ]);
 }
 
-console.info(config.module.rules);
-
 module.exports = config;
