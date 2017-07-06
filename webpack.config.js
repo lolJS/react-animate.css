@@ -39,7 +39,7 @@ const config = {
     ],
   },
   performance: {
-    hints: "warning", // enum
+    hints: 'warning', // enum
     maxAssetSize: 200000, // int (in bytes),
     maxEntrypointSize: 400000, // int (in bytes)
     assetFilter: function(assetFilename) {
@@ -51,15 +51,28 @@ const config = {
 
 
 if (process.env.NODE_ENV === 'production') {
-  // config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-  //   sourceMap: true
-  // }));
+  config.plugins = [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
+      compress: {
+        warnings: false, // Suppress uglification warnings
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+      },
+      exclude: [/\.min\.js$/gi] // skip pre-minified libs
+    })
+  ];
 
-  // config.module.rules.push(...[{
-  //   test: /\.js$/,
-  //   use: 'babel-loader',
-  //   exclude: [/node_modules/, /index\.demo\.js/, /\.test\.js/, /app\.js/],
-  // }]);
+  config.entry = './src/index.js';
 
   config.externals = [
     {
@@ -68,6 +81,13 @@ if (process.env.NODE_ENV === 'production') {
         commonjs2: 'react',
         commonjs: 'react',
         amd: 'react',
+      },
+      'react-dom': {
+        root: 'ReactDOM',
+        commonjs2: 'react-dom',
+        commonjs: 'react-dom',
+        amd: 'react-dom',
+        umd: 'react-dom',
       },
     },
   ];
@@ -90,7 +110,6 @@ if (ReactAnimateEnv === 'server' || ReactAnimateEnv === 'demo') {
     new ExtractTextPlugin({
 			filename: "style.css"
 		}),
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       mangle: true,
@@ -107,9 +126,7 @@ if (ReactAnimateEnv === 'server' || ReactAnimateEnv === 'demo') {
       exclude: [/\.min\.js$/gi] // skip pre-minified libs
     })
   ];
-  
-  console.info(config.plugins);
-  
+
   config.devServer = {
     contentBase: path.join(__dirname, 'dist'), // boolean | string | array, static file location
     compress: true, // enable gzip compression
