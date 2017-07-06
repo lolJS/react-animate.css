@@ -13,6 +13,7 @@ const config = {
     library: 'ReactAnimateCss',
     libraryTarget: 'umd',
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -50,9 +51,9 @@ const config = {
 
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-    sourceMap: true
-  }));
+  // config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+  //   sourceMap: true
+  // }));
 
   // config.module.rules.push(...[{
   //   test: /\.js$/,
@@ -78,13 +79,36 @@ if (ReactAnimateEnv === 'server' || ReactAnimateEnv === 'demo') {
   config.entry = './src/index.demo.js';
 
   config.plugins = [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
     new HtmlWebpackPlugin({
       title: 'React Animate.css',
       template: './index.ejs',
       env: ReactAnimateEnv === 'demo' ? 'production' : null,
     }),
-    // new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin({
+			filename: "style.css"
+		}),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
+      compress: {
+        warnings: false, // Suppress uglification warnings
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+      },
+      exclude: [/\.min\.js$/gi] // skip pre-minified libs
+    })
   ];
+  
+  console.info(config.plugins);
   
   config.devServer = {
     contentBase: path.join(__dirname, 'dist'), // boolean | string | array, static file location
@@ -95,28 +119,46 @@ if (ReactAnimateEnv === 'server' || ReactAnimateEnv === 'demo') {
     noInfo: true, // only errors & warns on hot reload
   };
 
-  [].push.apply(config.module.rules,
-    [
-      { 
-        test: /\.css$/, 
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: false,
-              modules: false,
-              importLoaders: 1,
-              // localIdentName: '[hash:base64:5]',
+  if (ReactAnimateEnv !== 'demo') {
+    [].push.apply(config.module.rules,
+      [
+        { 
+          test: /\.css$/, 
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: false,
+                modules: false,
+                importLoaders: 1,
+                // localIdentName: '[hash:base64:5]',
+              }
             }
-          }
-        ]
-      }, 
-      { test: /\.svg$/, use: 'url-loader' },
-      { test: /\.woff$/, use: 'url-loader' },
-      { test: /\.ttf$/, use: 'url-loader' },
-      { test: /\.eot$/, use: 'url-loader' }
-    ]);
+          ]
+        }, 
+        { test: /\.svg$/, use: 'url-loader' },
+        { test: /\.woff$/, use: 'url-loader' },
+        { test: /\.ttf$/, use: 'url-loader' },
+        { test: /\.eot$/, use: 'url-loader' }
+      ]);
+  }
+  else {
+    [].push.apply(config.module.rules,
+      [
+        { 
+          test: /\.css$/, 
+          use: ExtractTextPlugin.extract({
+  					fallback: "style-loader",
+  					use: "css-loader"
+  				})
+        }, 
+        { test: /\.svg$/, use: 'url-loader' },
+        { test: /\.woff$/, use: 'url-loader' },
+        { test: /\.ttf$/, use: 'url-loader' },
+        { test: /\.eot$/, use: 'url-loader' }
+      ]);
+  }
 }
 
 module.exports = config;

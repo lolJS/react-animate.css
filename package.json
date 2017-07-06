@@ -47,10 +47,10 @@
     "chai": "^4.0.2",
     "css-loader": "^0.28.4",
     "enzyme": "^2.4.1",
-    "eslint": "^3.19.0",
+    "eslint": "^4.1.1",
     "eslint-config-airbnb": "^15.0.1",
-    "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.1.0",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
@@ -58,6 +58,7 @@
     "jsdom": "^11.0.0",
     "json-loader": "^0.5.4",
     "mocha": "^3.0.2",
+    "node-sass": "^4.5.3",
     "raw-loader": "^0.5.1",
     "rimraf": "^2.5.4",
     "sinon": "^2.3.5",
@@ -66,14 +67,13 @@
     "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^2.5.0",
-    "webpack-hot-middleware": "^2.12.2"
+    "webpack-hot-middleware": "^2.18.2"
   },
   "dependencies": {
     "animate.css": "^3.5.1",
-    "node-sass": "^4.5.3",
     "prop-types": "^15.5.10",
-    "react": "^15.5.0",
-    "react-addons-css-transition-group": "^15.5.0",
-    "react-dom": "^15.5.0"
+    "react": "^15.6.0",
+    "react-addons-css-transition-group": "^15.6.0",
+    "react-dom": "^15.6.0"
   }
 }
