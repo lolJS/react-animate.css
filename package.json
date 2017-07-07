@@ -9,8 +9,8 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "start": "REACT_ANIMATE_WEBPACK=server webpack-dev-server -d --progress --colors",
-    "prepublish": "NODE_ENV=production npm run clean && webpack --progress --colors",
+    "start": "REACT_ANIMATE_WEBPACK=server eslint ./*.js && webpack-dev-server -d --progress --colors",
+    "prepublish": "NODE_ENV=production npm run clean && webpack -p --progress --colors",
     "demo": "NODE_ENV=production REACT_ANIMATE_WEBPACK=demo npm run prepublish",
     "lint": "eslint ./*.js",
     "test": "mocha --require babel-core/register test/setup.js --recursive src/*.test.js"
@@ -47,10 +47,11 @@
     "chai": "^4.0.2",
     "css-loader": "^0.28.4",
     "enzyme": "^2.4.1",
-    "eslint": "^4.1.1",
+    "eslint": "3.19.0",
     "eslint-config-airbnb": "^15.0.1",
+    "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
@@ -67,13 +68,18 @@
     "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^2.5.0",
-    "webpack-hot-middleware": "^2.18.2"
-  },
-  "dependencies": {
-    "animate.css": "^3.5.1",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.0",
+    "webpack-hot-middleware": "^2.18.2",
     "react-addons-css-transition-group": "^15.6.0",
+    "prop-types": "^15.5.10",
+    "animate.css": "^3.5.1",
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0"
+  },
+  "peerDependencies": {
+    "react-addons-css-transition-group": "^15.6.0",
+    "prop-types": "^15.5.10",
+    "animate.css": "^3.5.1",
+    "react": "^15.6.0",
     "react-dom": "^15.6.0"
   }
 }

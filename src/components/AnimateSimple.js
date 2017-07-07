@@ -27,7 +27,7 @@ class AnimateSimple extends Component {
       this.setAnimating(this.props.type);
     }
   }
-  
+
   setAnimating(animation) {
     this.setState({ animating: true });
     setTimeout(() => this.setState({ animating: false }), getAnimationTiming(animation));
@@ -47,19 +47,12 @@ class AnimateSimple extends Component {
 
 AnimateSimple.propTypes = {
   children: PropTypes.node.isRequired,
-  component: PropTypes.string,
   type: PropTypes.oneOf(animationClasses),
-  timeout: PropTypes.number,
-  forceAnimation: PropTypes.bool,
+  // forceAnimation: PropTypes.bool,
 };
 
 AnimateSimple.defaultProps = {
-  type: null,
-  enter: null,
-  leave: null,
-  appear: null,
-  component: 'div',
-  forceAnimation: false,
+  type: 'bounce',
 };
 
 export default AnimateSimple;

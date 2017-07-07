@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Animate from './index';
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
 
@@ -23,12 +23,15 @@ class App extends React.Component {
   onAnimClick(e) {
     const { animation } = this.state;
     const currentAnimation = !animation ? 'bounce' : animation;
-    
+
     e.preventDefault();
 
     this.setState({ animation: currentAnimation, forceAnimation: true });
-    
-    setTimeout(() => this.setState({ animation: currentAnimation, forceAnimation: false }), 1000)
+
+    setTimeout(() => this.setState({
+      animation: currentAnimation,
+      forceAnimation: false }),
+    1000);
   }
 
   render() {

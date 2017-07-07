@@ -57,7 +57,7 @@ Animate.propTypes = {
   appearTimeout: PropTypes.number,
   enterTimeout: PropTypes.number,
   leaveTimeout: PropTypes.number,
-  forceAnimation: PropTypes.bool,
+  // forceAnimation: PropTypes.bool,
 };
 
 Animate.defaultProps = {
